@@ -1,0 +1,8 @@
+spring:
+    application:
+        name: card-rk
+    #cloud:
+        #stream:
+            #bindings:
+                #output:
+                    #destination: dvivasvas-stream
