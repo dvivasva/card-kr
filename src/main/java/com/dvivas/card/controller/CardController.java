@@ -1,42 +1,27 @@
 package com.dvivas.card.controller;
 
-import com.dvivas.card.model.Account;
-import com.dvivas.card.service.KafkaProducer;
+import com.dvivas.card.dto.CardDto;
+import com.dvivas.card.service.CardService;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.cloud.stream.function.StreamBridge;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/kafka")
+@RequestMapping("/card")
 public class CardController {
 
 
-    private static final Logger logger = LoggerFactory.getLogger(CardController.class);
-    private final KafkaProducer kafkaProducer;
-    private final StreamBridge streamBridge;
+    private  final CardService cardService;
 
-
-    @GetMapping("/{numberAccount}")
-    public void send(@PathVariable String numberAccount) {
-        kafkaProducer.sendMessage(numberAccount);
-
-    }
-
-    @PostMapping
-    public void send(@RequestBody Account account) {
-        kafkaProducer.sendMessage(account);
-    }
-
-
-    @RequestMapping
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public void delegateToSupplier(@RequestBody String body) {
-        logger.info("Sending" + body);
-        streamBridge.send("toStream-out-0", body);
+    @GetMapping("/{numberCard}")
+    @Cacheable(value = "Card", key = "numberCard")
+    public Mono<CardDto> findByNumberCard(@PathVariable final String numberCard) {
+        return cardService.findByNumberCard(numberCard);
     }
 
 }
