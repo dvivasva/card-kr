@@ -1,6 +1,8 @@
 spring:
     application:
         name: card-rk
+server:
+    port: 8092
     #cloud:
         #stream:
             #bindings:
