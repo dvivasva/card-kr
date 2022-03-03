@@ -1,7 +1,7 @@
 package com.dvivas.card.listener;
 
 
-import com.dvivas.card.component.CardComponent;
+import com.dvivas.card.service.CardService;
 import com.dvivas.card.service.KafkaProducer;
 import com.dvivas.card.utils.JsonUtils;
 import com.dvivas.card.utils.Topic;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 public class KafkaConsumer {
 
     private static final Logger logger = LoggerFactory.getLogger(KafkaConsumer.class);
-    private final CardComponent cardComponent;
+    private final CardService cardService;
     private final KafkaProducer kafkaProducer;
 
     @KafkaListener(topics = Topic.FIND_NUMBER_CARD_ORIGIN, groupId = "group_id")
@@ -35,7 +35,7 @@ public class KafkaConsumer {
     }
     public void sendMessageAccount(String param, int index) {
         String newNumberCard = JsonUtils.removeFirstAndLast(param);
-        var find = cardComponent.findByNumberCard(newNumberCard);
+        var find = cardService.findByNumberCard(newNumberCard);
         find.doOnNext(p -> {
             if (index == 0) {
                 kafkaProducer.sendNumberAccountOrigin(p.getNumberAccount());
@@ -45,22 +45,5 @@ public class KafkaConsumer {
             logger.info("send messages to account -->");
         }).subscribe();
     }
-
-
-
-   /* @KafkaListener(topics = Topic.FIND_ACCOUNT, groupId = "group_id")
-    public void consume(String param) {
-        logger.info("Has been published find account from service wallet-kr : " + param);
-         sendMessageAccount(param);
-    }
-    public void sendMessageAccount(String param){
-        String newNumberCard= JsonUtils.removeFirstAndLast(param);
-       var find= cardComponent.findByNumberCard(newNumberCard);
-        find.doOnNext(p->{
-                     kafkaProducer.sendMessageNumberAccount(p.getNumberAccount());
-                    logger.info("send message to account"+p);
-                })
-                .subscribe();
-    }*/
 
 }
