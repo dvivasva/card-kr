@@ -2,8 +2,8 @@ package com.dvivas.card.utils;
 
 public interface Topic {
 
-    String FIND_NUMBER_CARD_ORIGIN="find-number-card-origin";
-    String FIND_NUMBER_CARD_DESTINATION="find-number-card-destination";
-    String FIND_ACCOUNT_ORIGIN="find-account-origin";
-    String FIND_ACCOUNT_DESTINATION="find-account-destination";
+    String FIND_NUMBERS_CARDS="find-numbers-cards";
+    String FIND_NUMBERS_ACCOUNTS="find-numbers-accounts";
+    String RESPONSE_PAYMENT_ON_CARD="response-payment-on-card";
+    String RESPONSE_PAYMENT_ON_WALLET="response-payment-on-wallet";
 }

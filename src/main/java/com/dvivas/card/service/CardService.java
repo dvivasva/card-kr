@@ -34,4 +34,11 @@ public class CardService {
         return reactiveMongoTemplate.findOne(query, Card.class).map(CardUtil::entityToDto);
 
     }
+    public Mono<CardDto> findByNumberAccount(String number) {
+        logger.info("inside methode find by number account ");
+        Query query = new Query();
+        query.addCriteria(Criteria.where("numberAccount").is(number));
+        return reactiveMongoTemplate.findOne(query, Card.class).map(CardUtil::entityToDto);
+
+    }
 }
